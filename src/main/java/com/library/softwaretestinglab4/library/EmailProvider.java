@@ -1,4 +1,4 @@
-package com.baarsch_bytes.Library;
+package com.library.softwaretestinglab4.library;
 
 public interface EmailProvider {
 
