@@ -19,8 +19,8 @@ public class LibraryService {
 
     public boolean checkoutResource(UUID resourceId, String memberEmail) {
         // ID validation is simpler because UUID cannot be "empty" like a String
-        if (resourceId == null || memberEmail == null || memberEmail.isEmpty()) {
-            throw new InvalidInputException("Resource ID and Member Email must not be null");
+        if (resourceId == null) {
+            throw new InvalidInputException("Resource ID must not be null");
         }
 
         // Check availability
