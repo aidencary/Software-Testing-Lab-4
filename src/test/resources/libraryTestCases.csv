@@ -1,0 +1,6 @@
+testCaseId,tciCovered,resourceId,memberEmail,isAvailable,updateStatus,sendEmail,expectedResult
+TC1,Valid checkout,valid-uuid,user@example.com,T,T,T,true
+TC2,Null resource ID,null,user@example.com,N/A,N/A,N/A,false
+TC3,Resource not available,valid-uuid,user@example.com,F,N/A,N/A,false
+TC4,Update status fails,valid-uuid,user@example.com,T,F,N/A,false
+TC5,Email send fails,valid-uuid,user@example.com,T,T,F,false
