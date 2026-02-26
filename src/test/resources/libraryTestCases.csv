@@ -1,6 +1,6 @@
-testCaseId,tciCovered,resourceId,memberEmail,isAvailable,updateStatus,sendEmail,expectedResult
-TC1,Valid checkout,valid-uuid,user@example.com,T,T,T,true
-TC2,Null resource ID,null,user@example.com,N/A,N/A,N/A,false
-TC3,Resource not available,valid-uuid,user@example.com,F,N/A,N/A,false
-TC4,Update status fails,valid-uuid,user@example.com,T,F,N/A,false
-TC5,Email send fails,valid-uuid,user@example.com,T,T,F,false
+Test Case ID,resourceId,memberEmail,isAvailable,updateStatus,sendEmail,Expected,isError
+TC1.1,550e8400-e29b-41d4-a716-446655440000,user@test.com,FALSE,TRUE,TRUE,FALSE,TRUE
+TC1.2,null,user@test.com,FALSE,TRUE,TRUE,FALSE,TRUE
+TC1.3,550e8400-e29b-41d4-a716-446655440000,user@test.com,TRUE,FALSE,TRUE,FALSE,TRUE
+TC1.4,550e8400-e29b-41d4-a716-446655440000,user@test.com,TRUE,TRUE,FALSE,FALSE,TRUE
+TC1.5,550e8400-e29b-41d4-a716-446655440000,user@test.com,TRUE,TRUE,TRUE,TRUE,FALSE
