@@ -13,11 +13,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LibraryServiceTest {
 
+    // Create mocks
     @Mock
     private EmailProvider mockEmailProvider;
 
@@ -42,6 +44,7 @@ public class LibraryServiceTest {
                 ? null
                 : UUID.fromString(resourceIdRaw);
 
+        // If the resource is null, it returns false
         if (resourceId != null) {
             // Check if the resource is available
             when(mockResourceRepository.isResourceAvailable(resourceId)).thenReturn(isAvailable);
@@ -52,18 +55,20 @@ public class LibraryServiceTest {
 
                 // Send the confirmation email that the resource has been checked out
                 if (updateStatus) {
-                    // Third condition: send confirmation email
                     String expectedEmailContent = "Resource ID: " + resourceId + " checked out.";
                     when(mockEmailProvider.sendEmail(memberEmail, expectedEmailContent)).thenReturn(sendEmail);
                 }
             }
 
         }
-        // Execute the method under test
-        boolean actualResult = libraryService.checkoutResource(resourceId, memberEmail);
-
-        // Assert that the service result matches the expected outcome from the CSV
-        assertEquals(expectedResult, actualResult, "Failed on test case: " + testCaseId);
+        if (isError) {
+            assertThrows(RuntimeException.class, () -> {
+                libraryService.checkoutResource(resourceId, memberEmail);
+            }, "Expected an exception for " + testCaseId + " but none was thrown.");
+        } else {
+            boolean result = libraryService.checkoutResource(resourceId, memberEmail);
+            assertEquals(expectedResult, result);
+        }
     }
 
 }
