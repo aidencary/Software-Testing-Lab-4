@@ -37,7 +37,7 @@ public class LibraryServiceTest {
     @CsvFileSource(resources = "/libraryTestCases.csv", numLinesToSkip = 1)
     public void testCheckoutResource(String testCaseId, String resourceIdRaw,
                                      String memberEmail, boolean isAvailable, boolean updateStatus,
-                                     boolean sendEmail, boolean expectedResult, boolean isError) {
+                                     boolean sendEmail, boolean expectedResult, boolean isError) throws Exception {
 
         // Manually handle the "null" string from CSV
         UUID resourceId = (resourceIdRaw == null || resourceIdRaw.equalsIgnoreCase("null"))
@@ -61,8 +61,9 @@ public class LibraryServiceTest {
             }
 
         }
+
         if (isError) {
-            assertThrows(RuntimeException.class, () -> {
+            assertThrows(Exception.class, () -> {
                 libraryService.checkoutResource(resourceId, memberEmail);
             }, "Expected an exception for " + testCaseId + " but none was thrown.");
         } else {

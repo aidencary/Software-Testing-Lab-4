@@ -1,9 +1,7 @@
 package com.library.softwaretestinglab4.library;
 
-import com.library.softwaretestinglab4.library.Exceptions.DatabaseUpdateException;
-import com.library.softwaretestinglab4.library.Exceptions.EmailDeliveryException;
-import com.library.softwaretestinglab4.library.Exceptions.InvalidInputException;
-import com.library.softwaretestinglab4.library.Exceptions.ResourceUnavailableException;
+import com.library.softwaretestinglab4.library.Exceptions.DatabaseFailureException;
+import com.library.softwaretestinglab4.library.Exceptions.EmailFailureException;
 
 import java.util.UUID;
 
@@ -17,31 +15,25 @@ public class LibraryService {
         this.resourceRepository = resourceRepository;
     }
 
-    public boolean checkoutResource(UUID resourceId, String memberEmail) {
+    public boolean checkoutResource(UUID resourceId, String memberEmail) throws DatabaseFailureException, EmailFailureException {
         // ID validation is simpler because UUID cannot be "empty" like a String
-        if (resourceId == null) {
-            throw new InvalidInputException("Resource ID must not be null");
-        }
+        if (resourceId == null) return false;
 
-        // Check availability
         if (!resourceRepository.isResourceAvailable(resourceId)) {
-            throw new ResourceUnavailableException("Resource " + resourceId + " is already checked out");
+            return false;
         }
 
-        // Update status
-        boolean updated = resourceRepository.updateStatus(resourceId, false);
-        if (!updated) {
-            throw new DatabaseUpdateException("Failed to update resource status in database");
+        boolean statusUpdated = resourceRepository.updateStatus(resourceId, false);
+        if(!statusUpdated) {
+            throw new DatabaseFailureException("Could not check out item.");
         }
 
-        // Send email
-        String content = "Resource ID: " + resourceId + " checked out.";
-        boolean emailSent = emailProvider.sendEmail(memberEmail, content);
+        boolean emailSent = emailProvider.sendEmail(memberEmail, "Resource ID: " + resourceId + " checked out.");
         if (!emailSent) {
-            throw new EmailDeliveryException("Checkout successful, but notification email failed to send");
+            throw new EmailFailureException("Could not send email.");
         }
+        return  true;
 
-        return true;
     }
 
 }
