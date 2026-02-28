@@ -1,11 +1,13 @@
 package com.library.softwaretestinglab4;
 
+import com.library.softwaretestinglab4.Converters.UUIDConstantConverter;
 import com.library.softwaretestinglab4.library.EmailProvider;
 import com.library.softwaretestinglab4.library.LibraryService;
 import com.library.softwaretestinglab4.library.ResourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -35,14 +37,9 @@ public class LibraryServiceTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/libraryTestCases.csv", numLinesToSkip = 1)
-    public void testCheckoutResource(String testCaseId, String resourceIdRaw,
+    public void testCheckoutResource(String testCaseId, @ConvertWith(UUIDConstantConverter.class) UUID resourceId,
                                      String memberEmail, boolean isAvailable, boolean updateStatus,
                                      boolean sendEmail, boolean expectedResult, boolean isError) throws Exception {
-
-        // Manually handle the "null" string from CSV
-        UUID resourceId = (resourceIdRaw == null || resourceIdRaw.equalsIgnoreCase("null"))
-                ? null
-                : UUID.fromString(resourceIdRaw);
 
         // If the resource is null, it returns false
         if (resourceId != null) {
