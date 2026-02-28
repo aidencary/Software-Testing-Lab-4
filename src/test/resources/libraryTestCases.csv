@@ -1,4 +1,4 @@
-Test Case ID,resourceId,memberEmail,isAvailable,updateStatus,sendEmail,Expected,isError,expectedException
+Test Case ID,resourceId,memberEmail,isAvailable,updateStatus,sendEmail,expectedResult,isError,expectedException
 TC1.1,550e8400-e29b-41d4-a716-446655440000,user@test.com,FALSE,TRUE,TRUE,FALSE,FALSE,None
 TC1.2,null,user@test.com,FALSE,TRUE,TRUE,FALSE,FALSE,None
 TC1.3,550e8400-e29b-41d4-a716-446655440000,user@test.com,TRUE,FALSE,TRUE,FALSE,TRUE,DatabaseFailureException
