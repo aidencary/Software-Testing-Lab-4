@@ -7,11 +7,16 @@ import java.util.UUID;
 public class UUIDConstantConverter extends SimpleArgumentConverter {
     @Override
     protected Object convert(Object source, Class<?> targetType) {
-        if ("null".equals(source)) {
+
+        if (source == null) return null;
+
+        // Trim whitespace and convert to lowercase for comparison
+        String input = source.toString().trim();
+
+        if ("null".equalsIgnoreCase(input) || input.isEmpty()) {
             return null;
-        }
-        else {
-            return UUID.fromString(source.toString());
+        } else {
+            return UUID.fromString(input);
         }
     }
 

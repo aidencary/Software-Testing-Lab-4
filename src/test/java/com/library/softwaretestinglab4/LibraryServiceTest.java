@@ -2,6 +2,8 @@ package com.library.softwaretestinglab4;
 
 import com.library.softwaretestinglab4.Converters.UUIDConstantConverter;
 import com.library.softwaretestinglab4.library.EmailProvider;
+import com.library.softwaretestinglab4.library.Exceptions.DatabaseFailureException;
+import com.library.softwaretestinglab4.library.Exceptions.EmailFailureException;
 import com.library.softwaretestinglab4.library.LibraryService;
 import com.library.softwaretestinglab4.library.ResourceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +41,7 @@ public class LibraryServiceTest {
     @CsvFileSource(resources = "/libraryTestCases.csv", numLinesToSkip = 1)
     public void testCheckoutResource(String testCaseId, @ConvertWith(UUIDConstantConverter.class) UUID resourceId,
                                      String memberEmail, boolean isAvailable, boolean updateStatus,
-                                     boolean sendEmail, boolean expectedResult, boolean isError) throws Exception {
+                                     boolean sendEmail, boolean expectedResult, boolean isError, String expectedException) throws Exception {
 
         // If the resource is null, it returns false
         if (resourceId != null) {
@@ -60,9 +62,13 @@ public class LibraryServiceTest {
         }
 
         if (isError) {
-            assertThrows(Exception.class, () -> {
+            Class<? extends Exception> exceptionClass = expectedException.equals("DatabaseFailureException")
+                    ? DatabaseFailureException.class
+                    : EmailFailureException.class;
+
+            assertThrows(exceptionClass, () -> {
                 libraryService.checkoutResource(resourceId, memberEmail);
-            }, "Expected an exception for " + testCaseId + " but none was thrown.");
+            }, "Expected " + expectedException + " for " + testCaseId);
         } else {
             boolean result = libraryService.checkoutResource(resourceId, memberEmail);
             assertEquals(expectedResult, result);
